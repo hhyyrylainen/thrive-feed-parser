@@ -5,6 +5,11 @@
 require 'logger'
 require 'open-uri'
 require 'feedparser'
+require 'fileutils'
+require 'htmlentities'
+require 'truncate_html'
+
+include TruncateHtmlHelper
 
 # Configuration
 require_relative 'config'
@@ -12,7 +17,12 @@ require_relative 'config'
 # Suppress tons of messages
 LogUtils::Logger[FeedParser::Parser].level = Logger::INFO
 
+FileUtils.mkdir_p TargetFolder
+
 puts "Starting RSS feed to html bot for thrive places"
+puts "Writing to folder: #{TargetFolder}"
+
+encoder = HTMLEntities.new
 
 $runFeeds = true
 
@@ -25,25 +35,34 @@ Signal.trap("INT") {
 $feedThread = Thread.new {
 
   while $runFeeds
-    items = []
-    
-    puts "Fetching feeds..."
+    puts "Processing feeds"
 
-    Feeds.each{|feedInfo|
+    Feeds.each{|feed|
 
-      feedParser = FeedParser::Parser.parse(open(feedInfo[:url]).read)
-      items += feedParser.items
-    }
+      feedParser = FeedParser::Parser.parse(open(feed[:url]).read)
 
-    # Skip handling the items if we should quit
-    if !$runFeeds
-      break
-    end
+      File.open(File.join(TargetFolder, feed[:name] + ".html"), 'w'){|file|
 
-    
-    items.each{|item|
+        itemNum = 0
+        
+        feedParser.items.each{|item|
 
-      
+          # Try to get rid of script tags if they are there
+          text = item.summary.gsub /<script>/i, "&lt;script&gt;"
+
+          file.puts "<p>#{encoder.encode(item.title)} by " + encoder.encode(
+                      item.author.to_s.split(' ')[0]) + 
+                    "<br>" + truncate_html(text, length: 90,
+                                           omission: '...(continued)') + 
+                    "<br><a href=\"#{item.url}\">#{encoder.encode(item.url)}</a></p>"
+          
+          ++itemNum
+
+          if itemNum >= feed[:maxItems]
+            break
+          end
+        }      
+      }
     }
 
     puts "Done handling feeds. Waiting for next run"
