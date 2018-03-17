@@ -56,7 +56,8 @@ $feedThread = Thread.new {
                     %{</span> by <span class="thrive-feed-author">} +
                     encoder.encode(item.author.to_s.split(' ')[0]) + "</span>" + 
                     %{</span><br><span class="thrive-feed-content">} +
-                    truncate_html(text, length: 90,
+                    truncate_html(text, length: if feed.include?(:maxLength) then
+                                   feed[:maxLength] else 150 end,
                                   omission: '...(continued)') +
                     %{<br><a class="thrive-feed-item-url" href="#{item.url}">} +
                     %{#{encoder.encode(item.url)}</a></span></div>}
