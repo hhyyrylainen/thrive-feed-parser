@@ -51,7 +51,7 @@ $feedThread = Thread.new {
           text = item.summary.gsub /<script>/i, "&lt;script&gt;"
 
           file.puts %{<div class="thrive-feed-item thrive-feed-name-#{feed[:name]}">} +
-                    %{<span class="thrive-feed-title"><span class="thrive-feed-title">} +
+                    %{<span class="thrive-feed-title"><span class="thrive-feed-title-main">} +
                     encoder.encode(item.title) +
                     %{</span> by <span class="thrive-feed-author">} +
                     encoder.encode(item.author.to_s.split(' ')[0]) + "</span>" + 
