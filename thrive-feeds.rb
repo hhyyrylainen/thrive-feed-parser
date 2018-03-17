@@ -56,7 +56,7 @@ $feedThread = Thread.new {
                                            omission: '...(continued)') + 
                     "<br><a href=\"#{item.url}\">#{encoder.encode(item.url)}</a></p>"
           
-          ++itemNum
+          itemNum += 1
 
           if itemNum >= feed[:maxItems]
             break
