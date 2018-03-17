@@ -50,11 +50,16 @@ $feedThread = Thread.new {
           # Try to get rid of script tags if they are there
           text = item.summary.gsub /<script>/i, "&lt;script&gt;"
 
-          file.puts "<p>#{encoder.encode(item.title)} by " + encoder.encode(
-                      item.author.to_s.split(' ')[0]) + 
-                    "<br>" + truncate_html(text, length: 90,
-                                           omission: '...(continued)') + 
-                    "<br><a href=\"#{item.url}\">#{encoder.encode(item.url)}</a></p>"
+          file.puts %{<p class="thrive-feed-item thrive-feed-name-#{feed[:name]}"><span } +
+                    %{class="thrive-feed-title">} +
+                    encoder.encode(item.title) +
+                    %{</span> by <span class="thrive-feed-author">} +
+                    encoder.encode(item.author.to_s.split(' ')[0]) + "</span>" + 
+                    %{<br><span class="thrive-feed-content"} +
+                    truncate_html(text, length: 90,
+                                  omission: '...(continued)') +
+                    %{<br><a class="thrive-feed-item-url" href="#{item.url}">} +
+                    %{#{encoder.encode(item.url)}</a></p>}
           
           itemNum += 1
 
