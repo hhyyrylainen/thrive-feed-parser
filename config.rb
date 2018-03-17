@@ -8,7 +8,7 @@ Feeds = [
   {
     name: "community-announcements",
     url: "https://community.revolutionarygamesstudio.com/c/announcements.rss",
-    maxItems: 3,
+    maxItems: 1,
     maxLength: 300,
   },
 ]
