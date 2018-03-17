@@ -52,15 +52,18 @@ $feedThread = Thread.new {
 
           file.puts %{<div class="thrive-feed-item thrive-feed-name-#{feed[:name]}">} +
                     %{<span class="thrive-feed-title"><span class="thrive-feed-title-main">} +
-                    encoder.encode(item.title) +
-                    %{</span> by <span class="thrive-feed-author">} +
-                    encoder.encode(item.author.to_s.split(' ')[0]) + "</span>" + 
+                    %{<a class="thrive-feed-title-link" href="#{item.url}">} +
+                    encoder.encode(item.title) + "</a>" +
+                    %{</span><span class="thrive-feed-by"> by } +
+                    %{<span class="thrive-feed-author">} +
+                    encoder.encode(item.author.to_s.split(' ')[0]) + "</span></span>" + 
                     %{</span><br><span class="thrive-feed-content">} +
                     truncate_html(text, length: if feed.include?(:maxLength) then
                                    feed[:maxLength] else 150 end,
                                   omission: '...(continued)') +
                     %{<br><a class="thrive-feed-item-url" href="#{item.url}">} +
-                    %{#{encoder.encode(item.url)}</a></span></div>}
+                    #%{#{encoder.encode(item.url)}</a></span></div>}
+                    %{Read it here</a></span></div>}
           
           itemNum += 1
 
