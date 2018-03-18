@@ -109,7 +109,7 @@ def handleCombinedFeed(feed)
       puts "Combined feed '#{feed[:name]}' sub feed has no items: " + subfeed
       return
     end
-    items += items + $latestItems[subfeed]
+    items += $latestItems[subfeed]
   }
 
   # Sort them by time
