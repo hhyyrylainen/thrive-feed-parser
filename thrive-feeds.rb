@@ -53,6 +53,9 @@ def preprocessItem(item, feed)
       if r[:title]
         item.title.gsub!(*r[:sub])
       end
+      if r[:summary]
+        item.summary.gsub!(*r[:sub])
+      end
     }
   end
 

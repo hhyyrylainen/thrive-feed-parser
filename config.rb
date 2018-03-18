@@ -23,6 +23,10 @@ Feeds = [
             title: true,
             sub: [/\w+\sclosed an issue/i, "issue closed"]
           },
+          {
+            summary: true,
+            sub: [/data-hydro-click[\w\-]*="[^"]*"/i, ""]
+          },
         ],
     }
   end,
