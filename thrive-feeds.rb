@@ -34,6 +34,13 @@ Signal.trap("INT") {
 
 $latestItems = {}
 
+# Monkey patch in the originalFeed
+module FeedParser
+  class Item
+    attr_accessor :originalFeed
+  end
+end
+
 def preprocessItem(item, feed)
   # Try to get rid of script tags if they are there
   item.summary = if item.summary? then
@@ -48,11 +55,14 @@ def preprocessItem(item, feed)
       end
     }
   end
+
+  item.originalFeed = feed[:name]
 end
 
 def outputItem(feed, file, item)
 
   file.puts %{<div class="thrive-feed-item thrive-feed-name-#{feed[:name]}">} +
+            %{<span class="thrive-feed-icon-#{item.originalFeed}></span>} +
             %{<span class="thrive-feed-title"><span class="thrive-feed-title-main">} +
             %{<a class="thrive-feed-title-link" href="#{item.url}">} +
             $encoder.encode(item.title) + "</a>" +
