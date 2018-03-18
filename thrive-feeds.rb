@@ -62,7 +62,7 @@ end
 def outputItem(feed, file, item)
 
   file.puts %{<div class="thrive-feed-item thrive-feed-name-#{feed[:name]}">} +
-            %{<span class="thrive-feed-icon-#{item.originalFeed}></span>} +
+            %{<span class="thrive-feed-icon-#{item.originalFeed}"></span>} +
             %{<span class="thrive-feed-title"><span class="thrive-feed-title-main">} +
             %{<a class="thrive-feed-title-link" href="#{item.url}">} +
             $encoder.encode(item.title) + "</a>" +
