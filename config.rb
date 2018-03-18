@@ -25,7 +25,11 @@ Feeds = [
           },
           {
             summary: true,
-            sub: [/data-hydro-click[\w\-]*="[^"]*"/i, ""]
+            sub: [/data-(hydro|ga|)-click[\w\-]*="[^"]*"/i, ""]
+          },
+          {
+            summary: true,
+            sub: [/<svg .*>.*<\/svg>/i, ""]
           },
         ],
     }
