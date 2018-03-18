@@ -13,6 +13,7 @@ Feeds = [
       url: "https://github.com/organizations/Revolutionary-Games/" +
       "revolutionary-bot.private.atom?token=#{GithubFeedToken}",
       maxItems: 15,
+      allowNoSummary: true,
       preprocess:
         [
           {

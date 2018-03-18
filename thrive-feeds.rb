@@ -42,10 +42,17 @@ module FeedParser
 end
 
 def preprocessItem(item, feed)
+  # Have some content on all feeds if they are not allowed to be empty
+  if !item.summary?
+    if !feed[:allowNoSummary]
+      item.summary = item.content
+    else
+      item.summary = ""
+    end
+  end
+
   # Try to get rid of script tags if they are there
-  item.summary = if item.summary? then
-                   item.summary else
-                   item.content end.gsub /<script>/i, "&lt;script&gt;"
+  item.summary.gsub! /<script>/i, "&lt;script&gt;"
 
   # apply processing
   if feed.include?(:preprocess)
