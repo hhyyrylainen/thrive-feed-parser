@@ -39,13 +39,16 @@ $feedThread = Thread.new {
 
     Feeds.each{|feed|
 
+      puts "Retrieving feed: " + feed[:name]
+
       feedParser = FeedParser::Parser.parse(open(feed[:url]).read)
+      items = feedParser.items
 
       File.open(File.join(TargetFolder, feed[:name] + ".html"), 'w'){|file|
 
         itemNum = 0
         
-        feedParser.items.each{|item|
+        items.each{|item|
 
           # Try to get rid of script tags if they are there
           text = item.summary.gsub /<script>/i, "&lt;script&gt;"
@@ -57,6 +60,9 @@ $feedThread = Thread.new {
                     %{</span><span class="thrive-feed-by"> by } +
                     %{<span class="thrive-feed-author">} +
                     encoder.encode(item.author.to_s.split(' ')[0]) + "</span></span>" + 
+                    %{<span class="thrive-feed-at"> at <span class="thrive-feed-time">} +
+                    encoder.encode(item.published) +
+                    "</span></span>" +
                     %{</span><br><span class="thrive-feed-content">} +
                     truncate_html(text, length: if feed.include?(:maxLength) then
                                    feed[:maxLength] else 150 end,
