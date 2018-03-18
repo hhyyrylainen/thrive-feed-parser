@@ -34,11 +34,23 @@ Signal.trap("INT") {
 
 $latestItems = {}
 
-def outputItem(feed, file, item)
+def preprocessItem(item, feed)
   # Try to get rid of script tags if they are there
-  text = if item.summary? then
-           item.summary else
-           item.content end.gsub /<script>/i, "&lt;script&gt;"
+  item.summary = if item.summary? then
+                   item.summary else
+                   item.content end.gsub /<script>/i, "&lt;script&gt;"
+
+  # apply processing
+  if feed.include?(:preprocess)
+    feed[:preprocess].each{|r|
+      if r[:title]
+        item.title.gsub!(*r[:sub])
+      end
+    }
+  end
+end
+
+def outputItem(feed, file, item)
 
   file.puts %{<div class="thrive-feed-item thrive-feed-name-#{feed[:name]}">} +
             %{<span class="thrive-feed-title"><span class="thrive-feed-title-main">} +
@@ -51,7 +63,7 @@ def outputItem(feed, file, item)
             $encoder.encode(item.published) +
             "</span></span>" +
             %{</span><br><span class="thrive-feed-content">} +
-            truncate_html(text, length: if feed.include?(:maxLength) then
+            truncate_html(item.summary, length: if feed.include?(:maxLength) then
                            feed[:maxLength] else 150 end,
                           omission: '...(continued)') +
             %{<br><a class="thrive-feed-item-url" href="#{item.url}">} +
@@ -88,6 +100,11 @@ def handleURLFeed(feed)
     puts "Failed to retrieve feed: " + feed[:name]
     return
   end
+
+  # preprocess items
+  items.each{|item|
+    preprocessItem item, feed
+  }
 
   # Store the items for combines
   $latestItems[feed[:name]] = items
