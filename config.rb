@@ -12,17 +12,33 @@ Feeds = [
       name: "github-revolutionarygames",
       url: "https://github.com/organizations/Revolutionary-Games/" +
       "revolutionary-bot.private.atom?token=#{GithubFeedToken}",
-      maxItems: 15,
+      maxItems: 20,
       allowNoSummary: true,
       preprocess:
         [
           {
             title: true,
-            sub: [/\w+\scommented/i, "new comment"]
+            sub: [/\w+\scommented/i, "New comment"]
           },
           {
             title: true,
-            sub: [/\w+\sclosed an issue/i, "issue closed"]
+            sub: [/\w+\sclosed an issue/i, "Issue closed"]
+          },
+          {
+            title: true,
+            sub: [/\w+\sopened a pull request/i, "New pull request"]
+          },
+          {
+            title: true,
+            sub: [/\w+\sforked .+ from/i, "New fork of"]
+          },
+          {
+            title: true,
+            sub: [/\w+\spushed/i, "New commits"]
+          },
+          {
+            title: true,
+            sub: [/\w+\sopened an issue/i, "New issue"]
           },
           {
             summary: true,
