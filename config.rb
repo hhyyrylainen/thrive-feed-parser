@@ -14,6 +14,7 @@ FEEDS = [
     name: 'mainsite-posts',
     url: 'https://revolutionarygamesstudio.com/feed/',
     save_as_is: true,
+    save_as_is_name: 'feed.rss',
     maxItems: 1
   },
   unless GITHUB_FEED_TOKEN.empty?

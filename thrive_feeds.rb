@@ -132,7 +132,13 @@ class ThriveFeedParser
     uri = URI.parse(@feed[:url])
     feed_data = URI.open(@feed[:url]).read
 
-    write_file_safe uri.path.gsub(%r{/}, ''), feed_data if @feed[:save_as_is]
+    if @feed[:save_as_is]
+      if @feed[:save_as_is_name]
+        write_file_safe @feed[:save_as_is_name], feed_data
+      else
+        write_file_safe uri.path.gsub(%r{/}, ''), feed_data
+      end
+    end
 
     feed_parser = FeedParser::Parser.parse(feed_data)
     items = feed_parser.items
