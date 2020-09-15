@@ -70,7 +70,7 @@ class ThriveFeedParser
     end
 
     # Try to get rid of script tags if they are there
-    item.summary.gsub!(/<script>/i, '&lt;script&gt;')
+    item.summary = item.summary.gsub(/<script>/i, '&lt;script&gt;')
   end
 
   def preprocess_item(item)
